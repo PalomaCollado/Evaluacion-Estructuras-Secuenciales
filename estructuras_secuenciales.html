@@ -1,0 +1,1142 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Estructuras Secuenciales — Paloma Collado Mora</title>
+  <style>
+    :root {
+      --bg: #f4f6fb;
+      --surface: #ffffff;
+      --primary: #1e293b;
+      --accent: #4f46e5;
+      --accent-soft: #eef2ff;
+      --accent-border: #c7d2fe;
+      --text: #334155;
+      --muted: #64748b;
+      --code-bg: #0f172a;
+      --code-text: #f8fafc;
+      --border: #e2e8f0;
+      --success: #10b981;
+      --radius: 14px;
+      --shadow: 0 4px 20px -2px rgba(15, 23, 42, 0.06);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Inter, Helvetica, Arial, sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Header Banner */
+    header {
+      background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 55%, #312e81 100%);
+      color: #ffffff;
+      padding: 2.75rem 1.5rem 3.25rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    header::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background-image: radial-gradient(rgba(255, 255, 255, 0.08) 1px, transparent 1px);
+      background-size: 22px 22px;
+      pointer-events: none;
+    }
+
+    .header-inner {
+      max-width: 1080px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 1;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: flex-end;
+      gap: 1.25rem;
+    }
+
+    .badge-top {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      background: rgba(255, 255, 255, 0.12);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      padding: 0.3rem 0.8rem;
+      border-radius: 999px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: #c7d2fe;
+      margin-bottom: 0.75rem;
+    }
+
+    h1 {
+      font-size: clamp(1.85rem, 3.5vw, 2.6rem);
+      font-weight: 800;
+      letter-spacing: -0.025em;
+      line-height: 1.15;
+    }
+
+    .subtitle {
+      color: #cbd5e1;
+      font-size: 0.98rem;
+      margin-top: 0.4rem;
+    }
+
+    .student-card {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      border-radius: 12px;
+      padding: 0.9rem 1.25rem;
+      text-align: right;
+    }
+
+    .student-card .name {
+      font-weight: 700;
+      font-size: 1.02rem;
+      color: #ffffff;
+    }
+
+    .student-card .course {
+      font-size: 0.85rem;
+      color: #c7d2fe;
+      margin-top: 0.15rem;
+    }
+
+    /* Sticky Toolbar */
+    .toolbar-wrap {
+      max-width: 1080px;
+      margin: -1.5rem auto 1.75rem;
+      padding: 0 1.25rem;
+      position: sticky;
+      top: 0.75rem;
+      z-index: 30;
+    }
+
+    .toolbar {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.1);
+      padding: 0.75rem 1rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .search-box {
+      flex: 1 1 260px;
+      position: relative;
+    }
+
+    .search-box input {
+      width: 100%;
+      padding: 0.55rem 0.9rem 0.55rem 2.35rem;
+      border: 1px solid var(--border);
+      border-radius: 9px;
+      font-size: 0.92rem;
+      color: var(--primary);
+      background: #f8fafc;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .search-box input:focus {
+      outline: none;
+      border-color: var(--accent);
+      background: #ffffff;
+      box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.14);
+    }
+
+    .search-icon {
+      position: absolute;
+      left: 0.75rem;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--muted);
+      font-size: 0.95rem;
+      pointer-events: none;
+    }
+
+    .toolbar-actions {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      border: 1px solid var(--border);
+      background: #ffffff;
+      color: var(--primary);
+      padding: 0.5rem 0.85rem;
+      border-radius: 9px;
+      font-size: 0.84rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      transition: all 0.18s ease;
+    }
+
+    .btn:hover {
+      background: #f8fafc;
+      border-color: #cbd5e1;
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: #ffffff;
+      border-color: var(--accent);
+    }
+
+    .btn-primary:hover {
+      background: #4338ca;
+      border-color: #4338ca;
+    }
+
+    .counter-pill {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--accent);
+      background: var(--accent-soft);
+      border: 1px solid var(--accent-border);
+      padding: 0.35rem 0.75rem;
+      border-radius: 999px;
+    }
+
+    /* Quick Jump Index */
+    .quick-nav {
+      max-width: 1080px;
+      margin: 0 auto 1.5rem;
+      padding: 0 1.25rem;
+    }
+
+    .quick-nav-inner {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 0.85rem 1rem;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .quick-nav-label {
+      font-size: 0.78rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--muted);
+      margin-right: 0.4rem;
+    }
+
+    .jump-chip {
+      text-decoration: none;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--text);
+      background: #f1f5f9;
+      padding: 0.22rem 0.58rem;
+      border-radius: 6px;
+      transition: all 0.15s ease;
+    }
+
+    .jump-chip:hover {
+      background: var(--accent);
+      color: #ffffff;
+    }
+
+    /* Main Container & Cards */
+    main {
+      max-width: 1080px;
+      margin: 0 auto;
+      padding: 0 1.25rem 3.5rem;
+      display: grid;
+      gap: 1.15rem;
+    }
+
+    .exercise-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      scroll-margin-top: 5.5rem;
+      transition: transform 0.18s ease, box-shadow 0.18s ease;
+    }
+
+    .exercise-card:hover {
+      box-shadow: 0 10px 26px -4px rgba(15, 23, 42, 0.09);
+    }
+
+    .card-header {
+      padding: 1.15rem 1.35rem;
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 1rem;
+      border-bottom: 1px solid #f1f5f9;
+    }
+
+    .card-title-group {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.9rem;
+    }
+
+    .ex-number {
+      flex-shrink: 0;
+      width: 2.2rem;
+      height: 2.2rem;
+      border-radius: 10px;
+      background: var(--accent-soft);
+      color: var(--accent);
+      border: 1px solid var(--accent-border);
+      font-weight: 800;
+      font-size: 0.92rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 0.1rem;
+    }
+
+    .ex-statement {
+      font-size: 0.98rem;
+      color: var(--primary);
+      font-weight: 500;
+    }
+
+    .ex-statement ul {
+      margin: 0.45rem 0 0 1.25rem;
+      font-weight: 400;
+      color: var(--text);
+    }
+
+    .toggle-btn {
+      flex-shrink: 0;
+      background: #f8fafc;
+      border: 1px solid var(--border);
+      color: var(--muted);
+      border-radius: 8px;
+      padding: 0.35rem 0.65rem;
+      font-size: 0.78rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .toggle-btn:hover {
+      background: var(--accent-soft);
+      color: var(--accent);
+      border-color: var(--accent-border);
+    }
+
+    /* Code Block */
+    .code-wrapper {
+      background: var(--code-bg);
+      color: var(--code-text);
+      position: relative;
+    }
+
+    .exercise-card.collapsed .code-wrapper {
+      display: none;
+    }
+
+    .code-topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.5rem 1.1rem;
+      background: rgba(255, 255, 255, 0.04);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      font-size: 0.76rem;
+      color: #94a3b8;
+    }
+
+    .dots {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+    }
+
+    .dot.red { background: #ef4444; }
+    .dot.yellow { background: #f59e0b; }
+    .dot.green { background: #10b981; }
+
+    .filename {
+      margin-left: 0.5rem;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      color: #cbd5e1;
+    }
+
+    .copy-btn {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      color: #e2e8f0;
+      border-radius: 6px;
+      padding: 0.25rem 0.65rem;
+      font-size: 0.75rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .copy-btn:hover {
+      background: rgba(255, 255, 255, 0.16);
+      color: #ffffff;
+    }
+
+    .copy-btn.copied {
+      background: rgba(16, 185, 129, 0.22);
+      border-color: rgba(16, 185, 129, 0.5);
+      color: #6ee7b7;
+    }
+
+    pre {
+      margin: 0;
+      padding: 1rem 1.25rem;
+      overflow-x: auto;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+      font-size: 0.89rem;
+      line-height: 1.5;
+      tab-size: 4;
+    }
+
+    /* Syntax Highlighting */
+    .tok-kw { color: #c084fc; font-weight: 600; }
+    .tok-fn { color: #38bdf8; }
+    .tok-str { color: #86efac; }
+    .tok-num { color: #fbbf24; }
+    .tok-op { color: #94a3b8; }
+
+    .empty-state {
+      text-align: center;
+      padding: 3rem 1rem;
+      background: var(--surface);
+      border: 1px dashed #cbd5e1;
+      border-radius: var(--radius);
+      color: var(--muted);
+      display: none;
+    }
+
+    footer {
+      text-align: center;
+      padding: 1.5rem;
+      color: var(--muted);
+      font-size: 0.84rem;
+      border-top: 1px solid var(--border);
+      background: var(--surface);
+    }
+
+    @media (max-width: 640px) {
+      .student-card {
+        text-align: left;
+        width: 100%;
+      }
+      .card-header {
+        flex-direction: column;
+      }
+      .toggle-btn {
+        align-self: flex-end;
+      }
+    }
+
+    @media print {
+      body { background: #ffffff; }
+      header { background: #1e293b !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; padding: 1.5rem; }
+      .toolbar-wrap, .quick-nav, .copy-btn, .toggle-btn { display: none !important; }
+      .exercise-card { break-inside: avoid; box-shadow: none; border: 1px solid #cbd5e1; margin-bottom: 0.85rem; }
+      .exercise-card.collapsed .code-wrapper { display: block !important; }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="header-inner">
+      <div>
+        <div class="badge-top">Python 3 &bull; Cuaderno de Ejercicios</div>
+        <h1>Estructuras secuenciales</h1>
+        <p class="subtitle">Recopilación completa de enunciados y soluciones originales (Ejercicios 1 – 20)</p>
+      </div>
+      <div class="student-card">
+        <div class="name">Paloma Collado Mora</div>
+        <div class="course">2º Bachillerato B</div>
+      </div>
+    </div>
+  </header>
+
+  <div class="toolbar-wrap">
+    <div class="toolbar">
+      <div class="search-box">
+        <span class="search-icon">&#128269;</span>
+        <input type="text" id="searchInput" placeholder="Buscar por número, palabra clave o función (ej. hipotenusa, math, input)..." />
+      </div>
+      <div class="toolbar-actions">
+        <span class="counter-pill" id="counterPill">20 ejercicios</span>
+        <button class="btn" id="toggleAllBtn" type="button">Plegar todos</button>
+        <button class="btn btn-primary" type="button" onclick="window.print()">Imprimir / PDF</button>
+      </div>
+    </div>
+  </div>
+
+  <nav class="quick-nav" aria-label="Índice rápido">
+    <div class="quick-nav-inner" id="quickNav">
+      <span class="quick-nav-label">Ir a:</span>
+    </div>
+  </nav>
+
+  <main id="exercisesContainer">
+    <!-- EJERCICIO 1 -->
+    <article class="exercise-card" id="ej-1" data-num="1">
+      <div class="card-header">
+        <div class="card-title-group">
+          <span class="ex-number">01</span>
+          <div class="ex-statement">Escribir un programa que pregunte al usuario su nombre, y luego lo salude.</div>
+        </div>
+        <button class="toggle-btn" type="button">Ocultar código</button>
+      </div>
+      <div class="code-wrapper">
+        <div class="code-topbar">
+          <div class="dots"><span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span><span class="filename">ejercicio_1.py</span></div>
+          <button class="copy-btn" type="button">Copiar código</button>
+        </div>
+        <pre><code>nombre = input("¿Cuál es tu nombre? ")
+print("¡Hola", nombre)</code></pre>
+      </div>
+    </article>
+
+    <!-- EJERCICIO 2 -->
+    <article class="exercise-card" id="ej-2" data-num="2">
+      <div class="card-header">
+        <div class="card-title-group">
+          <span class="ex-number">02</span>
+          <div class="ex-statement">Calcular el perímetro y área de un rectángulo dada su base y su altura.</div>
+        </div>
+        <button class="toggle-btn" type="button">Ocultar código</button>
+      </div>
+      <div class="code-wrapper">
+        <div class="code-topbar">
+          <div class="dots"><span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span><span class="filename">ejercicio_2.py</span></div>
+          <button class="copy-btn" type="button">Copiar código</button>
+        </div>
+        <pre><code>import math
+
+base = float(input("Introduce la base: "))
+altura=float(input("Introduce la altura:"))
+perimetro = 2 * (base + altura)
+area = base * altura
+print("El perímetro es:",perimetro)
+print("El área es:", area)</code></pre>
+      </div>
+    </article>
+
+    <!-- EJERCICIO 3 -->
+    <article class="exercise-card" id="ej-3" data-num="3">
+      <div class="card-header">
+        <div class="card-title-group">
+          <span class="ex-number">03</span>
+          <div class="ex-statement">Dados los catetos de un triángulo rectángulo, calcular su hipotenusa.</div>
+        </div>
+        <button class="toggle-btn" type="button">Ocultar código</button>
+      </div>
+      <div class="code-wrapper">
+        <div class="code-topbar">
+          <div class="dots"><span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span><span class="filename">ejercicio_3.py</span></div>
+          <button class="copy-btn" type="button">Copiar código</button>
+        </div>
+        <pre><code>import math
+
+catetoB = float(input("Ingrese el cateto b: "))
+catetoC = float(input("Ingrese el cateto C: "))
+
+hipotenusa = math.sqrt(catetoB**2+catetoC**2)
+
+print("Dado dicho triángulo de cateto b", catetoB, "y cateto c", catetoC, "obtenemos una hipotenusa de:", hipotenusa)</code></pre>
+      </div>
+    </article>
+
+    <!-- EJERCICIO 4 -->
+    <article class="exercise-card" id="ej-4" data-num="4">
+      <div class="card-header">
+        <div class="card-title-group">
+          <span class="ex-number">04</span>
+          <div class="ex-statement">Dados dos números, mostrar la suma, resta, división y multiplicación de ambos.</div>
+        </div>
+        <button class="toggle-btn" type="button">Ocultar código</button>
+      </div>
+      <div class="code-wrapper">
+        <div class="code-topbar">
+          <div class="dots"><span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span><span class="filename">ejercicio_4.py</span></div>
+          <button class="copy-btn" type="button">Copiar código</button>
+        </div>
+        <pre><code>import math
+
+num1 = int(input("Ingrese un numero: "))
+num2 = int(input("Ingrese un numero: "))
+
+suma = num1 + num2
+resta = num1 - num2
+division = num1 / num2
+multiplicación = num1 * num2
+
+print("suma:", suma)
+print("resta:", resta)
+print("division:", division)
+print("multiplicacion:", multiplicación)</code></pre>
+      </div>
+    </article>
+
+    <!-- EJERCICIO 5 -->
+    <article class="exercise-card" id="ej-5" data-num="5">
+      <div class="card-header">
+        <div class="card-title-group">
+          <span class="ex-number">05</span>
+          <div class="ex-statement">Escribir un programa que convierta un valor dado en grados Fahrenheit a grados Celsius. Recordar que la fórmula para la conversión es: <code>C = (F - 32) * 5 / 9</code></div>
+        </div>
+        <button class="toggle-btn" type="button">Ocultar código</button>
+      </div>
+      <div class="code-wrapper">
+        <div class="code-topbar">
+          <div class="dots"><span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span><span class="filename">ejercicio_5.py</span></div>
+          <button class="copy-btn" type="button">Copiar código</button>
+        </div>
+        <pre><code>import math
+
+grados = float(input("Introduce el numero de grados Fahrenheit: "))
+celsius = (grados-32)*5/9
+
+print("Tus grados en Celsius han pasado a ser:", celsius)</code></pre>
+      </div>
+    </article>
+
+    <!-- EJERCICIO 6 -->
+    <article class="exercise-card" id="ej-6" data-num="6">
+      <div class="card-header">
+        <div class="card-title-group">
+          <span class="ex-number">06</span>
+          <div class="ex-statement">Calcular la media de tres números pedidos por teclado.</div>
+        </div>
+        <button class="toggle-btn" type="button">Ocultar código</button>
+      </div>
+      <div class="code-wrapper">
+        <div class="code-topbar">
+          <div class="dots"><span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span><span class="filename">ejercicio_6.py</span></div>
+          <button class="copy-btn" type="button">Copiar código</button>
+        </div>
+        <pre><code>import math
+
+num1 = float(input("Ingrese un numero: "))
+num2 = float(input("Ingrese otro numero: "))
+num3 = float(input("Ingrese el tercer numero: "))
+
+media = (num1+num2+num3)/3
+print("El valor de la media de los números introducidos es: ", media)</code></pre>
+      </div>
+    </article>
+
+    <!-- EJERCICIO 7 -->
+    <article class="exercise-card" id="ej-7" data-num="7">
+      <div class="card-header">
+        <div class="card-title-group">
+          <span class="ex-number">07</span>
+          <div class="ex-statement">Realiza un programa que reciba una cantidad de minutos y muestre por pantalla a cuantas horas y minutos corresponde. Por ejemplo: 1000 minutos son 16 horas y 40 minutos.</div>
+        </div>
+        <button class="toggle-btn" type="button">Ocultar código</button>
+      </div>
+      <div class="code-wrapper">
+        <div class="code-topbar">
+          <div class="dots"><span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span><span class="filename">ejercicio_7.py</span></div>
+          <button class="copy-btn" type="button">Copiar código</button>
+        </div>
+        <pre><code>import math
+
+minutos = float(input("Ingrese la cantidad de minutos: "))
+
+horas = minutos // 60
+minutos2 = minutos % 60
+print(minutos, "minutos esquivalen a", horas, "horas y", minutos2, "minutos")</code></pre>
+      </div>
+    </article>
+
+    <!-- EJERCICIO 8 -->
+    <article class="exercise-card" id="ej-8" data-num="8">
+      <div class="card-header">
+        <div class="card-title-group">
+          <span class="ex-number">08</span>
+          <div class="ex-statement">Un vendedor recibe un sueldo base más un 10% extra por comisión de sus ventas, el vendedor desea saber cuánto dinero obtendrá por concepto de comisiones por las tres ventas que realiza en el mes y el total que recibirá en el mes tomando en cuenta su sueldo base y comisiones.</div>
+        </div>
+        <button class="toggle-btn" type="button">Ocultar código</button>
+      </div>
+      <div class="code-wrapper">
+        <div class="code-topbar">
+          <div class="dots"><span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span><span class="filename">ejercicio_8.py</span></div>
+          <button class="copy-btn" type="button">Copiar código</button>
+        </div>
+        <pre><code>sueldo_base = float(input("Introduce el sueldo base: "))
+
+venta1 = float(input("Introduce el importe de la primera venta: "))
+venta2 = float(input("Introduce el importe de la segunda venta: "))
+venta3 = float(input("Introduce el importe de la tercera venta: "))
+
+comision1 = venta1 * 0.10
+comision2 = venta2 * 0.10
+comision3 = venta3 * 0.10
+
+total_comisiones = comision1 + comision2 + comision3
+sueldo_total = sueldo_base + total_comisiones
+
+print("Comisión de la primera venta:", comision1)
+print("Comisión de la segunda venta:", comision2)
+print("Comisión de la tercera venta:", comision3)
+print("Total de comisiones:", total_comisiones)
+print("Sueldo total del mes:", sueldo_total)</code></pre>
+      </div>
+    </article>
+
+    <!-- EJERCICIO 9 -->
+    <article class="exercise-card" id="ej-9" data-num="9">
+      <div class="card-header">
+        <div class="card-title-group">
+          <span class="ex-number">09</span>
+          <div class="ex-statement">Una tienda ofrece un descuento del 15% sobre el total de la compra y un cliente desea saber cuánto deberá pagar finalmente por su compra.</div>
+        </div>
+        <button class="toggle-btn" type="button">Ocultar código</button>
+      </div>
+      <div class="code-wrapper">
+        <div class="code-topbar">
+          <div class="dots"><span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span><span class="filename">ejercicio_9.py</span></div>
+          <button class="copy-btn" type="button">Copiar código</button>
+        </div>
+        <pre><code>compra = float(input("Introduce el importe total de la compra: "))
+
+descuento = compra * 0.15
+total_pagar = compra - descuento
+
+print("El descuento aplicado es:", descuento)
+print("El importe final a pagar es:", total_pagar)</code></pre>
+      </div>
+    </article>
+
+    <!-- EJERCICIO 10 -->
+    <article class="exercise-card" id="ej-10" data-num="10">
+      <div class="card-header">
+        <div class="card-title-group">
+          <span class="ex-number">10</span>
+          <div class="ex-statement">
+            Un alumno desea saber cuál será su calificación final en la materia de Algoritmos. Dicha calificación se compone de los siguientes porcentajes:
+            <ul>
+              <li>55% del promedio de sus tres calificaciones parciales.</li>
+              <li>30% de la calificación del examen final.</li>
+              <li>15% de la calificación de un trabajo final.</li>
+            </ul>
+          </div>
+        </div>
+        <button class="toggle-btn" type="button">Ocultar código</button>
+      </div>
+      <div class="code-wrapper">
+        <div class="code-topbar">
+          <div class="dots"><span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span><span class="filename">ejercicio_10.py</span></div>
+          <button class="copy-btn" type="button">Copiar código</button>
+        </div>
+        <pre><code>parcial1 = float(input("Introduce la primera calificación parcial: "))
+parcial2 = float(input("Introduce la segunda calificación parcial: "))
+parcial3 = float(input("Introduce la tercera calificación parcial: "))
+
+examen_final = float(input("Introduce la calificación del examen final: "))
+trabajo_final = float(input("Introduce la calificación del trabajo final: "))
+
+promedio = (parcial1 + parcial2 + parcial3) / 3
+
+nota_final = (promedio * 0.55) + (examen_final * 0.30) + (trabajo_final * 0.15)
+
+print("El promedio de las calificaciones parciales es:", promedio)
+print("La calificación final es:", nota_final)</code></pre>
+      </div>
+    </article>
+
+    <!-- EJERCICIO 11 -->
+    <article class="exercise-card" id="ej-11" data-num="11">
+      <div class="card-header">
+        <div class="card-title-group">
+          <span class="ex-number">11</span>
+          <div class="ex-statement">Pide al usuario dos números y muestra la "distancia" entre ellos (el valor absoluto de su diferencia, de modo que el resultado sea siempre positivo).</div>
+        </div>
+        <button class="toggle-btn" type="button">Ocultar código</button>
+      </div>
+      <div class="code-wrapper">
+        <div class="code-topbar">
+          <div class="dots"><span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span><span class="filename">ejercicio_11.py</span></div>
+          <button class="copy-btn" type="button">Copiar código</button>
+        </div>
+        <pre><code>num1 = float(input("Ingrese un numero: "))
+num2 = float(input("Ingrese otro numero: "))
+distancia = abs(num1 - num2)
+print("La distancia entre ambos números es: ", distancia)</code></pre>
+      </div>
+    </article>
+
+    <!-- EJERCICIO 12 -->
+    <article class="exercise-card" id="ej-12" data-num="12">
+      <div class="card-header">
+        <div class="card-title-group">
+          <span class="ex-number">12</span>
+          <div class="ex-statement">Pide al usuario dos pares de números x1,y2 y x2,y2, que representen dos puntos en el plano. Calcula y muestra la distancia entre ellos.</div>
+        </div>
+        <button class="toggle-btn" type="button">Ocultar código</button>
+      </div>
+      <div class="code-wrapper">
+        <div class="code-topbar">
+          <div class="dots"><span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span><span class="filename">ejercicio_12.py</span></div>
+          <button class="copy-btn" type="button">Copiar código</button>
+        </div>
+        <pre><code>import math
+
+print("Vamos a calcular la distancia entre dos puntos dentro del plano, por lo tanto:")
+x1=float(input("Ingrese el primer punto en el eje x: "))
+y1=float(input("Ingrese el primer punto en el eje y: "))
+x2=float(input("Ingrese el segundo punto en el eje x: "))
+y2=float(input("Ingrese el segundo punto en el eje y: "))
+distancia=math.sqrt((x2-x1)**2+(y2-y1)**2)
+print("La distancia entre los dos puntos es:", distancia)</code></pre>
+      </div>
+    </article>
+
+    <!-- EJERCICIO 13 -->
+    <article class="exercise-card" id="ej-13" data-num="13">
+      <div class="card-header">
+        <div class="card-title-group">
+          <span class="ex-number">13</span>
+          <div class="ex-statement">Realizar un algoritmo que lea un número y que muestre su raíz cuadrada y su raíz cúbica. Python3 no tiene ninguna función predefinida que permita calcular la raíz cúbica, ¿Cómo se puede calcular?</div>
+        </div>
+        <button class="toggle-btn" type="button">Ocultar código</button>
+      </div>
+      <div class="code-wrapper">
+        <div class="code-topbar">
+          <div class="dots"><span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span><span class="filename">ejercicio_13.py</span></div>
+          <button class="copy-btn" type="button">Copiar código</button>
+        </div>
+        <pre><code>import math
+
+numero=float(input("Ingrese un numero: "))
+raiz1=math.sqrt(numero)
+raiz2=(numero)**1/3
+print("Su raíz cuadrada es ", raiz1, "y su raíz cúbica", raiz2)</code></pre>
+      </div>
+    </article>
+
+    <!-- EJERCICIO 14 -->
+    <article class="exercise-card" id="ej-14" data-num="14">
+      <div class="card-header">
+        <div class="card-title-group">
+          <span class="ex-number">14</span>
+          <div class="ex-statement">Dado un número de dos cifras, diseñe un algoritmo que permita obtener el número invertido. Ejemplo, si se introduce 23 que muestre 32.</div>
+        </div>
+        <button class="toggle-btn" type="button">Ocultar código</button>
+      </div>
+      <div class="code-wrapper">
+        <div class="code-topbar">
+          <div class="dots"><span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span><span class="filename">ejercicio_14.py</span></div>
+          <button class="copy-btn" type="button">Copiar código</button>
+        </div>
+        <pre><code>numero=str(input("Ingrese un numero que contenga dos cifras: "))
+invertido = numero[::-1]
+print("El numero invertifo es: ",invertido)</code></pre>
+      </div>
+    </article>
+
+    <!-- EJERCICIO 15 -->
+    <article class="exercise-card" id="ej-15" data-num="15">
+      <div class="card-header">
+        <div class="card-title-group">
+          <span class="ex-number">15</span>
+          <div class="ex-statement">Dadas dos variables numéricas A y B, que el usuario debe teclear, se pide realizar un algoritmo que intercambie los valores de ambas variables y muestre cuánto valen al final las dos variables.</div>
+        </div>
+        <button class="toggle-btn" type="button">Ocultar código</button>
+      </div>
+      <div class="code-wrapper">
+        <div class="code-topbar">
+          <div class="dots"><span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span><span class="filename">ejercicio_15.py</span></div>
+          <button class="copy-btn" type="button">Copiar código</button>
+        </div>
+        <pre><code>A = float(input("Introduce el valor de A: "))
+B = float(input("Introduce el valor de B: "))
+
+auxiliar = A
+A = B
+B = auxiliar
+
+print("El valor final de A es:", A)
+print("El valor final de B es:", B)</code></pre>
+      </div>
+    </article>
+
+    <!-- EJERCICIO 16 -->
+    <article class="exercise-card" id="ej-16" data-num="16">
+      <div class="card-header">
+        <div class="card-title-group">
+          <span class="ex-number">16</span>
+          <div class="ex-statement">Dos vehículos viajan a diferentes velocidades (v1 y v2) y están distanciados por una distancia d. El que está detrás viaja a una velocidad mayor. Se pide hacer un algoritmo para ingresar la distancia entre los dos vehículos (km) y sus respectivas velocidades (km/h) y con esto determinar y mostrar en que tiempo (minutos) alcanzará el vehículo más rápido al otro.</div>
+        </div>
+        <button class="toggle-btn" type="button">Ocultar código</button>
+      </div>
+      <div class="code-wrapper">
+        <div class="code-topbar">
+          <div class="dots"><span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span><span class="filename">ejercicio_16.py</span></div>
+          <button class="copy-btn" type="button">Copiar código</button>
+        </div>
+        <pre><code>d = float(input("Introduce la distancia entre los vehículos (km): "))
+
+v1 = float(input("Introduce la velocidad del vehículo más rápido (km/h): "))
+v2 = float(input("Introduce la velocidad del vehículo más lento (km/h): "))
+
+tiempo = (d / (v1 - v2)) * 60
+
+print("El vehículo más rápido alcanzará al otro en", tiempo, "minutos")</code></pre>
+      </div>
+    </article>
+
+    <!-- EJERCICIO 17 -->
+    <article class="exercise-card" id="ej-17" data-num="17">
+      <div class="card-header">
+        <div class="card-title-group">
+          <span class="ex-number">17</span>
+          <div class="ex-statement">Un ciclista parte de una ciudad A a las HH horas, MM minutos y SS segundos. El tiempo de viaje hasta llegar a otra ciudad B es de T segundos. Escribir un algoritmo que determine la hora de llegada a la ciudad B.</div>
+        </div>
+        <button class="toggle-btn" type="button">Ocultar código</button>
+      </div>
+      <div class="code-wrapper">
+        <div class="code-topbar">
+          <div class="dots"><span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span><span class="filename">ejercicio_17.py</span></div>
+          <button class="copy-btn" type="button">Copiar código</button>
+        </div>
+        <pre><code>H = int(input("Introduce la hora de salida: "))
+M = int(input("Introduce los minutos de salida: "))
+S = int(input("Introduce los segundos de salida: "))
+
+T = int(input("Introduce el tiempo de viaje en segundos: "))
+
+hora_salida = H * 3600 + M * 60 + S
+
+hora_llegada = hora_salida + T
+
+horas = (hora_llegada // 3600) % 24
+minutos = (hora_llegada % 3600) // 60
+segundos = hora_llegada % 60
+
+print("La hora de llegada es:", horas, ":", minutos, ":", segundos)</code></pre>
+      </div>
+    </article>
+
+    <!-- EJERCICIO 18 -->
+    <article class="exercise-card" id="ej-18" data-num="18">
+      <div class="card-header">
+        <div class="card-title-group">
+          <span class="ex-number">18</span>
+          <div class="ex-statement">Pedir el nombre y los dos apellidos de una persona y mostrar las iniciales.</div>
+        </div>
+        <button class="toggle-btn" type="button">Ocultar código</button>
+      </div>
+      <div class="code-wrapper">
+        <div class="code-topbar">
+          <div class="dots"><span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span><span class="filename">ejercicio_18.py</span></div>
+          <button class="copy-btn" type="button">Copiar código</button>
+        </div>
+        <pre><code>nombre = input("¿Cuál es tu nombre completo? ")
+palabras = nombre.split()
+print(palabras[0][0], palabras[1][0], palabras[2][0])</code></pre>
+      </div>
+    </article>
+
+    <!-- EJERCICIO 19 -->
+    <article class="exercise-card" id="ej-19" data-num="19">
+      <div class="card-header">
+        <div class="card-title-group">
+          <span class="ex-number">19</span>
+          <div class="ex-statement">Escribir un algoritmo para calcular la nota final de un estudiante, considerando que: por cada respuesta correcta 5 puntos, por una incorrecta -1 y por respuestas en blanco 0. Imprime el resultado obtenido por el estudiante.</div>
+        </div>
+        <button class="toggle-btn" type="button">Ocultar código</button>
+      </div>
+      <div class="code-wrapper">
+        <div class="code-topbar">
+          <div class="dots"><span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span><span class="filename">ejercicio_19.py</span></div>
+          <button class="copy-btn" type="button">Copiar código</button>
+        </div>
+        <pre><code>correcta= int(input("¿Cuántas respuestas correctas has tenido?"))
+incorrecta= int(input("¿Cuántas respuestas incorrectas has tenido?"))
+blanco= int(input("¿y en blanco?"))
+puntos = (correcta*5) - incorrecta
+nota = puntos/5
+print("Tu nota final es: ",nota)</code></pre>
+      </div>
+    </article>
+
+    <!-- EJERCICIO 20 -->
+    <article class="exercise-card" id="ej-20" data-num="20">
+      <div class="card-header">
+        <div class="card-title-group">
+          <span class="ex-number">20</span>
+          <div class="ex-statement">Diseñar un algoritmo que nos diga el dinero que tenemos (en euros y céntimos) después de pedirnos cuantas monedas tenemos (de 2€, 1€, 50 céntimos, 20 céntimos o 10 céntimos).</div>
+        </div>
+        <button class="toggle-btn" type="button">Ocultar código</button>
+      </div>
+      <div class="code-wrapper">
+        <div class="code-topbar">
+          <div class="dots"><span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span><span class="filename">ejercicio_20.py</span></div>
+          <button class="copy-btn" type="button">Copiar código</button>
+        </div>
+        <pre><code>monedas2 = int(input("¿Cuántas monedas de 2€ tienes? "))
+monedas1 = int(input("¿Cuántas monedas de 1€ tienes? "))
+monedas50 = int(input("¿Cuántas monedas de 50 céntimos tienes? "))
+monedas20 = int(input("¿Cuántas monedas de 20 céntimos tienes? "))
+monedas10 = int(input("¿Cuántas monedas de 10 céntimos tienes? "))
+total = (monedas2 * 2) + (monedas1 * 1) + (monedas50 * 0.50) + (monedas20 * 0.20) + (monedas10 * 0.10)
+euros = total // 10
+centimos = total % 10
+print("Tienes", euros, "euros y", centimos, "céntimos")</code></pre>
+      </div>
+    </article>
+
+    <div class="empty-state" id="emptyState">
+      No se han encontrado ejercicios que coincidan con tu búsqueda.
+    </div>
+  </main>
+
+  <footer>
+    Paloma Collado Mora &bull; 2º Bachillerato B &bull; Estructuras secuenciales en Python
+  </footer>
+
+  <script>
+    (function () {
+      const cards = Array.from(document.querySelectorAll(".exercise-card"));
+      const quickNav = document.getElementById("quickNav");
+      const searchInput = document.getElementById("searchInput");
+      const counterPill = document.getElementById("counterPill");
+      const toggleAllBtn = document.getElementById("toggleAllBtn");
+      const emptyState = document.getElementById("emptyState");
+
+      // Lightweight Python syntax highlighter
+      function highlightPython(code) {
+        const escaped = code
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;");
+
+        const tokenRegex = /("(?:[^"\]|\.)*"|'(?:[^'\]|\.)*')|(import|from|as|def|return|if|elif|else|for|while|in|and|or|not|True|False|None)|(print|input|int|float|str|abs|len|round)|(\d+(?:\.\d+)?)/g;
+
+        return escaped.replace(tokenRegex, function (match, str, kw, fn, num) {
+          if (str) return '<span class="tok-str">' + str + "</span>";
+          if (kw) return '<span class="tok-kw">' + kw + "</span>";
+          if (fn) return '<span class="tok-fn">' + fn + "</span>";
+          if (num) return '<span class="tok-num">' + num + "</span>";
+          return match;
+        });
+      }
+
+      // Build quick nav chips & apply syntax highlighting
+      cards.forEach((card) => {
+        const num = card.dataset.num;
+        const chip = document.createElement("a");
+        chip.href = "#ej-" + num;
+        chip.className = "jump-chip";
+        chip.textContent = "#" + num;
+        quickNav.appendChild(chip);
+
+        const codeEl = card.querySelector("pre code");
+        const rawCode = codeEl.textContent;
+        codeEl.dataset.raw = rawCode;
+        codeEl.innerHTML = highlightPython(rawCode);
+
+        // Toggle individual code visibility
+        const toggleBtn = card.querySelector(".toggle-btn");
+        toggleBtn.addEventListener("click", () => {
+          card.classList.toggle("collapsed");
+          toggleBtn.textContent = card.classList.contains("collapsed")
+            ? "Mostrar código"
+            : "Ocultar código";
+        });
+
+        // Copy raw code button
+        const copyBtn = card.querySelector(".copy-btn");
+        copyBtn.addEventListener("click", async () => {
+          try {
+            await navigator.clipboard.writeText(rawCode);
+            copyBtn.textContent = "¡Copiado!";
+            copyBtn.classList.add("copied");
+            setTimeout(() => {
+              copyBtn.textContent = "Copiar código";
+              copyBtn.classList.remove("copied");
+            }, 1800);
+          } catch (e) {
+            const ta = document.createElement("textarea");
+            ta.value = rawCode;
+            document.body.appendChild(ta);
+            ta.select();
+            document.execCommand("copy");
+            document.body.removeChild(ta);
+            copyBtn.textContent = "¡Copiado!";
+            copyBtn.classList.add("copied");
+            setTimeout(() => {
+              copyBtn.textContent = "Copiar código";
+              copyBtn.classList.remove("copied");
+            }, 1800);
+          }
+        });
+      });
+
+      // Filter exercises
+      searchInput.addEventListener("input", () => {
+        const q = searchInput.value.trim().toLowerCase();
+        let visibleCount = 0;
+
+        cards.forEach((card) => {
+          const text = card.innerText.toLowerCase();
+          const num = card.dataset.num;
+          const match = !q || text.includes(q) || ("ejercicio " + num).includes(q);
+          card.style.display = match ? "" : "none";
+          if (match) visibleCount++;
+        });
+
+        counterPill.textContent =
+          visibleCount === 1 ? "1 ejercicio" : visibleCount + " ejercicios";
+        emptyState.style.display = visibleCount === 0 ? "block" : "none";
+      });
+
+      // Collapse / Expand all
+      let allCollapsed = false;
+      toggleAllBtn.addEventListener("click", () => {
+        allCollapsed = !allCollapsed;
+        cards.forEach((card) => {
+          card.classList.toggle("collapsed", allCollapsed);
+          const btn = card.querySelector(".toggle-btn");
+          btn.textContent = allCollapsed ? "Mostrar código" : "Ocultar código";
+        });
+        toggleAllBtn.textContent = allCollapsed ? "Desplegar todos" : "Plegar todos";
+      });
+    })();
+  </script>
+</body>
+</html>
